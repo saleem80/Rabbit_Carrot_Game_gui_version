@@ -365,7 +365,6 @@ restart_button.grid(row=3, column=2)
 steps_label = tk.Label(root, text=f'Steps: {user_steps}')
 steps_label.grid(row=1, column=2)
 
-# Labels to display simulation results
 minimum_steps_label = tk.Label(root, text="")
 minimum_steps_label.grid(row=4, column=0, columnspan=2, pady=(2, 1))
 user_steps_label = tk.Label(root, text="")

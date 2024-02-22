@@ -156,15 +156,21 @@ def find_shortest_path_to_win(grid, rabbit_x, rabbit_y, carrots, holes):
 def simulate(grid, rabbit_x, rabbit_y, path_to_carrot, path_to_hole, user_steps):
     steps = 0
     display_grid_tk(grid)
+    minimum_steps_label.config(text=f'Congats you made it in {user_steps} steps')
+    user_steps_label.config(text="Here is simulation of an efficient approach")
     root.update()
     time.sleep(2)
+    minimum_steps_label.config(text="")
+    user_steps_label.config(text="")
+    time.sleep(1)
+
     for x, y in path_to_carrot:
         grid[rabbit_x][rabbit_y] = '-'
         grid[x][y] = 'r'
         rabbit_x, rabbit_y = x, y
         display_grid_tk(grid)
         root.update()
-        time.sleep(2)
+        time.sleep(1)
         steps += 1
 
     temp_x, temp_y = adjacent_target_cord(grid, rabbit_x, rabbit_y, 'c')
@@ -172,7 +178,7 @@ def simulate(grid, rabbit_x, rabbit_y, path_to_carrot, path_to_hole, user_steps)
     grid[rabbit_x][rabbit_y] = 'R'
     display_grid_tk(grid)
     root.update()
-    time.sleep(2)
+    time.sleep(1)
     steps += 1
 
     for x, y in path_to_hole:
@@ -181,7 +187,7 @@ def simulate(grid, rabbit_x, rabbit_y, path_to_carrot, path_to_hole, user_steps)
         rabbit_x, rabbit_y = x, y
         display_grid_tk(grid)
         root.update()
-        time.sleep(2)
+        time.sleep(1)
         steps += 1
 
     display_grid_tk(grid)
@@ -189,8 +195,11 @@ def simulate(grid, rabbit_x, rabbit_y, path_to_carrot, path_to_hole, user_steps)
     user_steps_label.config(text=f'Total number of steps you made: {user_steps}')
     root.update()
     time.sleep(2)
+    return
     
-    # Update labels in GUI
+
+
+
 
 def start_game():
     global grid_size, num_carrot, num_holes, grid, rabbit_x, rabbit_y, carrots, holes, grid_1, rabbit_x_1, rabbit_y_1, carrot_held, isWon, user_steps
@@ -224,6 +233,14 @@ def start_game():
     root.bind("q", quit_game)
     root.bind("c", pickup_carrot)
 
+    size_label.destroy()
+    grid_size_entry.destroy()
+    carrots_label.destroy()
+    num_carrot_entry.destroy()
+    holes_label.destroy()
+    num_holes_entry.destroy()
+    start_button.destroy()
+
 
 
 def move_left(event):
@@ -253,8 +270,6 @@ def move_rabbit(dx, dy):
         isWon=True
 
     if isWon:
-        print("Congrats! You won! \n")
-        print("Here is an efficient approach: ")
 
         path_to_carrot, path_to_hole = find_shortest_path_to_win(
             grid_1, rabbit_x_1, rabbit_y_1, carrots, holes)
@@ -262,7 +277,7 @@ def move_rabbit(dx, dy):
                  path_to_carrot, path_to_hole, user_steps)
 
 def pickup_carrot(event):
-    global rabbit_x, rabbit_y, carrot_held
+    global rabbit_x, rabbit_y, carrot_held, user_steps
 
     adj = [(0, -1), (0, 1), (-1, 0), (1, 0),
            (-1, -1), (-1, 1), (1, -1), (1, 1)]
@@ -301,8 +316,10 @@ def restart_game():
     carrot_held = False
     isWon = False
     user_steps = 0
-
+    minimum_steps_label.config(text="")
+    user_steps_label.config(text="")
     display_grid_tk(grid)
+    root.update()
 
 # GUI initialization
 root = tk.Tk()
@@ -344,15 +361,22 @@ user_steps = 0
 
 
 # Input fields
-tk.Label(root, text="Size:").grid(row=1, column=0)
+# Input fields
+size_label = tk.Label(root, text="Size:")
+size_label.grid(row=1, column=0)
+
 grid_size_entry = tk.Entry(root)
 grid_size_entry.grid(row=1, column=1)
 
-tk.Label(root, text="Carrots:").grid(row=2, column=0)
+carrots_label = tk.Label(root, text="Carrots:")
+carrots_label.grid(row=2, column=0)
+
 num_carrot_entry = tk.Entry(root)
 num_carrot_entry.grid(row=2, column=1)
 
-tk.Label(root, text="Holes:").grid(row=3, column=0)
+holes_label = tk.Label(root, text="Holes:")
+holes_label.grid(row=3, column=0)
+
 num_holes_entry = tk.Entry(root)
 num_holes_entry.grid(row=3, column=1)
 
@@ -360,15 +384,16 @@ start_button = tk.Button(root, text="Start Game", command=start_game)
 start_button.grid(row=2, column=2)
 
 restart_button = tk.Button(root, text="Restart Game", command=restart_game)
-restart_button.grid(row=3, column=2)
+restart_button.grid(row=3, column=2, pady=(2, 10))
 
 steps_label = tk.Label(root, text=f'Steps: {user_steps}')
 steps_label.grid(row=1, column=2)
 
+
 minimum_steps_label = tk.Label(root, text="")
-minimum_steps_label.grid(row=4, column=0, columnspan=2, pady=(2, 1))
+minimum_steps_label.grid(row=2, column=0, columnspan=2, pady=(2, 1))
 user_steps_label = tk.Label(root, text="")
-user_steps_label.grid(row=5, column=0, columnspan=2, pady=(2, 1))
+user_steps_label.grid(row=3, column=0, columnspan=2, pady=(2, 10))
 
 
 root.mainloop()
